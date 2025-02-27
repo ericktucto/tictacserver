@@ -2,7 +2,8 @@ import http from 'node:http';
 import { Server, Socket } from 'socket.io';
 import { app } from '@/api/server';
 import WebSocketServices from '@/websocket/services';
-import ApiServices from '@/api/services';
+import { ApiService } from './services/api';
+import { printRoutes } from './utils';
 
 function onConnection(socket: Socket, io: Server) {
   console.log('connected:', socket.id);
@@ -19,9 +20,8 @@ async function main() {
     }
   });
 
-  ApiServices.forEach((Service) => {
-    new Service({ app, io });
-  });
+  const service = new ApiService({ io, express: app });
+  service.register();
 
   io.on('connection', (socket: Socket) => onConnection(socket, io));
 
@@ -29,6 +29,8 @@ async function main() {
   const host = app.get('host');
   server.listen(port, host, function() {
     console.log(`Running server on ${host}:${port}`);
+    app._router.stack.forEach(printRoutes.bind(null, []));
   });
 }
 main();
+
