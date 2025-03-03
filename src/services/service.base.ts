@@ -1,3 +1,4 @@
+import { Express } from "express-serve-static-core";
 export abstract class Service {
   #io = null;
   #socket = null;
@@ -12,7 +13,7 @@ export abstract class Service {
     return this.#io;
   }
 
-  get socket() {
+  get socket(): Express | null {
     return this.#socket;
   }
 

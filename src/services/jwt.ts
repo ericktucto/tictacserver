@@ -16,6 +16,24 @@ export async function encode(data: IAuth): Promise<string> {
   return jwt;
 }
 
-export function decode() {
-  return true;
+export async function decode(token: string) {
+  try {
+    const { payload, protectedHeader } = await jose.jwtVerify(token, secret, {
+      issuer: JWT_ISSUER,
+      audience: JWT_AUDIENCE,
+      algorithms: ['HS256'],
+    });
+    return {
+      error: false,
+      payload,
+      protectedHeader
+    };
+  } catch (e) {
+    console.log(e);
+    return {
+      error: 'Token Invalid',
+      payload: null,
+      protectedHeader: null
+    };
+  }
 }

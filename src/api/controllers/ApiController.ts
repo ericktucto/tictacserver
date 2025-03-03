@@ -3,6 +3,7 @@ import { Express } from "express";
 import { Router } from "express";
 import { Router as IRouter, Response } from "express-serve-static-core";
 import { ObjectSchema } from "joi";
+import { IAuth } from "@/services/api";
 
 interface IValidateResult<T> {
   error: boolean;
@@ -18,6 +19,10 @@ export abstract class ApiController {
     this.#io = io;
     this.#express = serverExpress;
     this.#router = Router();
+  }
+
+  get auth(): IAuth | undefined {
+    return this.express.get('auth');
   }
 
   get router() {
