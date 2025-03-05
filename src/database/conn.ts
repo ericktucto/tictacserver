@@ -1,10 +1,13 @@
 import { DB_USER, DB_PASSWORD, DB_HOST, DB_DATABASE } from '@/config';
-import mongoose from 'mongoose';
+import { Room } from '@/model/Room';
+import { Sequelize } from 'sequelize-typescript';
 
-const uri = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:27017/${DB_DATABASE}`;
-
-export const db = mongoose.connect(uri).then((res) => {
-  if (res) console.log("Connected to db");
-}).catch((err) => {
-  console.error(err);
+const conn = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_DATABASE}`, {
+  logging: console.log,
+  models: [
+    Room
+  ],
 });
+
+export default conn;
+export { conn };

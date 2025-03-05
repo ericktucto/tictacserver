@@ -4,6 +4,7 @@ import { app } from '@/api/server';
 import WebSocketServices from '@/websocket/services';
 import { ApiService } from './services/api';
 import { printRoutes } from './utils';
+import { conn } from './database/conn';
 
 function onConnection(socket: Socket, io: Server) {
   console.log('connected:', socket.id);
@@ -27,10 +28,17 @@ async function main() {
 
   const port = app.get('port');
   const host = app.get('host');
-  server.listen(port, host, function() {
-    console.log(`Running server on ${host}:${port}`);
-    app._router.stack.forEach(printRoutes.bind(null, []));
-  });
+  conn
+    .sync({ alter: true })
+    .then(() => {
+      console.log("Connected database successfully");
+      server.listen(port, host, function() {
+        console.log(`Running server on ${host}:${port}`);
+        app._router.stack.forEach(printRoutes.bind(null, []));
+      });
+    }).catch((err) => {
+      console.error(err);
+    });
 }
 main();
 

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { schema as loginDto, ILoginDto } from './schemas/login.dto';
 import { encode } from "@/services/jwt";
 import { ApiController } from "../ApiController";
+import { Room } from "@/model/Room";
 
 export class LoginController extends ApiController {
 
@@ -11,9 +12,10 @@ export class LoginController extends ApiController {
       return result.response;
     }
     const name = result.value.name;
+    const rooms = await Room.findAll();
     return res.json({
       name,
-      rooms: [],
+      rooms,
       token: await encode({ name, id: '1' }),
     });
   }

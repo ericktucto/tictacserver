@@ -11,14 +11,17 @@ services:
       sh -c 'if [ "$NODE_ENV" = "prod" ]; then exec npm start; else exec npm run dev; fi'
     networks:
       - app
-  mongo:
-    image: mongo
+  database:
+    image: postgres
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: "${DB_USER:-mongo}"
-      MONGO_INITDB_ROOT_PASSWORD: "${DB_PASSWORD:-mongo}"
+      POSTGRES_USER: "${DB_USER:-tictac}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:-secret}"
+      POSTGRES_DB: "${DB_DATABASE:-application}"
     volumes:
-      - ./storage/mongodb:/data/db
+      - ./storage/database:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
     networks:
       - app
 networks:

@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import { ApiController } from "@/api/controllers/ApiController";
 import { Service } from "./service.base";
 import { LoginController } from "@/api/controllers/auth/login.controller";
+import { RoomController } from '@/api/controllers/rooming/room.controller';
 import { decode } from './jwt';
 import { Player } from '@/model/Player';
 
@@ -67,6 +68,7 @@ export class ApiService extends Service {
   get controllers() {
     return [
       LoginController,
+      RoomController
     ];
   }
 }
